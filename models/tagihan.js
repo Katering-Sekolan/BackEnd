@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     total_tagihan: DataTypes.INTEGER,
     tagihan_dibayar: DataTypes.INTEGER,
     tagihan_belum_dibayar: DataTypes.INTEGER,
-    status_tagihan: DataTypes.ENUM,
+    status_tagihan: DataTypes.ENUM("BELUM_DIBAYAR", "BELUM_LUNAS", "LUNAS"),
     tanggal_tagihan: DataTypes.DATE
   }, {
     sequelize,

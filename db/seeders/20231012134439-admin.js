@@ -19,6 +19,7 @@ module.exports = {
         username: "KateringAdmin",
         password: bcrypt.hashSync("KateringQita123@", 10),
         nomor_hp: 6282137884501,
+        createdAt: new Date(),
       },
     ]);
   },

@@ -16,7 +16,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       nomor_hp: {
-        type: Sequelize.INTEGER
+        type: Sequelize.BIGINT(15)
       },
       createdAt: {
         allowNull: false,
