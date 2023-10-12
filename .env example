@@ -1,0 +1,9 @@
+PORT = 1242
+
+DB_NAME = Your DB Name
+DB_USERNAME = username
+DB_PASSWORD = pass
+DB_HOST = localhost
+DB_DIALECT = mysql
+
+JWT_SECRET = whats
