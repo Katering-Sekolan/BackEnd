@@ -1,12 +1,9 @@
-const { User } = require("../models");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = process.env;
+const { User, Deposit } = require("../models");
 
 module.exports = {
-  register: async (req, res) => {
+  create: async (req, res) => {
     try {
-      const { nama, password, nomor_hp } = req.body;
+      const { nama, kelas, nomor_hp } = req.body;
 
       const user = await User.findOne({
         where: {
@@ -17,78 +14,67 @@ module.exports = {
       if (user) {
         return res.status(409).json({
           status: "failed",
-          message: `Akun dengan nomor hp ${nomor_hp} sudah terdaftar`,
+          message: `Pelanggan dengan nomor hp ${nomor_hp} sudah terdaftar`,
         });
       }
 
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(password, salt);
-
       const newUser = await User.create({
         nama,
-        password: hashedPassword,
+        kelas,
         nomor_hp,
+      });
+
+      const newDeposit = await Deposit.create({
+        user_id: newUser.id,
+        tanggal_deposit: new Date(),
+        jumlah_deposit: 0,
       });
 
       return res.status(201).json({
         status: "success",
-        message: "Berhasil register",
-        data: {
-          user: {
-            nama: newUser.nama,
-            nomor_hp: newUser.nomor_hp,
-          },
-        },
+        message: `Berhasil menambah pelanggan baru dengan nama ${nama}`,
+        data: newUser,
       });
     } catch (err) {
       console.log(err);
     }
   },
 
-  login: async (req, res) => {
+  update: async (req, res) => {
     try {
-      const { nomor_hp, password } = req.body;
+      const { id } = req.params;
+      const { nama, kelas, nomor_hp } = req.body;
 
-      const user = await User.findOne({
+      const cekUser = await User.findOne({
         where: {
-          nomor_hp,
+          id,
         },
       });
 
-      if (!user) {
+      if (!cekUser) {
         return res.status(404).json({
           status: "failed",
-          message: `Akun dengan nomor hp ${nomor_hp} tidak ditemukan`,
+          message: `User dengan id ${id} tidak ditemukan`,
         });
       }
 
-      const isValidPassword = await bcrypt.compare(password, user.password);
+      const user = await User.update(
+        {
+          nama,
+          kelas,
+          nomor_hp,
+        },
+        {
+          where: {
+            id,
+          },
+        }
+      );
 
-      if (!isValidPassword) {
-        return res.status(404).json({
-          status: "failed",
-          message: "Password salah",
-        });
-      }
-
-      const payload = {
-        id: user.id,
-        nama: user.nama,
-        nomor_hp: user.nomor_hp,
-      };
-
-      const token = jwt.sign(payload, JWT_SECRET);
-
-      const data = {
-        nama: user.nama,
-        nomor_hp: user.nomor_hp,
-      };
-
-      return res.status(200).send({
-        status: true,
-        message: `Hallo ${user.nama}! Kamu Berhasil Login`,
-        data,
-        token,
+      return res.status(200).json({
+        status: "success",
+        message: `Berhasil mengubah data pelanggan dengan nama ${cekUser.nama}`,
+        data: user,
       });
     } catch (err) {
       console.log(err);
@@ -99,16 +85,14 @@ module.exports = {
     try {
       const users = await User.findAll({
         attributes: {
-          exclude: ["password", "createdAt", "updatedAt"],
+          exclude: ["createdAt", "updatedAt"],
         },
       });
 
       return res.status(200).json({
         status: "success",
-        message: "Berhasil mendapatkan semua user",
-        data: {
-          users,
-        },
+        message: "Berhasil mendapatkan semua pelanggan",
+        data: users,
       });
     } catch (err) {
       console.log(err);
@@ -124,7 +108,7 @@ module.exports = {
           id,
         },
         attributes: {
-          exclude: ["password", "createdAt", "updatedAt"],
+          exclude: ["createdAt", "updatedAt"],
         },
       });
 
@@ -138,9 +122,7 @@ module.exports = {
       return res.status(200).json({
         status: "success",
         message: `Berhasil mendapatkan user dengan id ${id}`,
-        data: {
-          user,
-        },
+        data: user,
       });
     } catch (err) {
       console.log(err);
