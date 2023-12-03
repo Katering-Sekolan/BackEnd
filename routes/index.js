@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const cadmin = require("../controllers/admin");
-const cuser = require("../controllers/user");
+const cadmin = require("../controllers/adminController");
+const cuser = require("../controllers/userController");
 
 // Admin
 router.post("/loginAdmin", cadmin.login);

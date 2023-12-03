@@ -2,24 +2,24 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Admins", {
+    await queryInterface.createTable("Pembayarans", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      username: {
+      jumlah_pembayaran: {
         allowNull: false,
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
       },
-      password: {
+      status_pembayaran: {
         allowNull: false,
-        type: Sequelize.STRING,
+        type: Sequelize.ENUM("LUNAS", "BELUM LUNAS"),
       },
-      role: {
+      tanggal_pembayaran: {
         allowNull: false,
-        type: Sequelize.ENUM("ADMIN", "SUPERADMIN"),
+        type: Sequelize.DATE,
       },
       createdAt: {
         allowNull: false,
@@ -32,6 +32,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Admins");
+    await queryInterface.dropTable("Pembayarans");
   },
 };

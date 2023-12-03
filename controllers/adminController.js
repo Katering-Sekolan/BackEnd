@@ -1,4 +1,4 @@
-const { Admin } = require("../../models");
+const { Admin } = require("../models");
 const { JWT_SECRET } = process.env;
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -10,7 +10,7 @@ module.exports = {
 
       const admin = await Admin.findOne({
         where: {
-          username
+          username,
         },
       });
 
@@ -52,5 +52,5 @@ module.exports = {
     } catch (err) {
       console.log(err);
     }
-  }
+  },
 };
