@@ -16,12 +16,12 @@ module.exports = (sequelize, DataTypes) => {
 
       this.hasMany(models.RiwayatPesan, {
         foreignKey: "user_id",
-        as: "user",
+        as: "user_riwayat",
       });
 
       this.hasMany(models.TagihanBulanan, {
         foreignKey: "user_id",
-        as: "user",
+        as: "user_tagihan_bulanan",
       });
     }
   }
