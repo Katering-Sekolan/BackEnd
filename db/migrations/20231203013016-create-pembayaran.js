@@ -9,6 +9,14 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
+      tagihanBulanan_id: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: "TagihanBulanans",
+          key: "id",
+        },
+      },
       jumlah_pembayaran: {
         allowNull: false,
         type: Sequelize.INTEGER,

@@ -9,10 +9,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsTo(models.TagihanBulanan, {
+        foreignKey: "tagihanBulanan_id",
+        as: "tagihan_bulanan",
+      });
     }
   }
   Pembayaran.init(
     {
+      tagihanBulanan_id: DataTypes.INTEGER,
       jumlah_pembayaran: DataTypes.INTEGER,
       status_pembayaran: DataTypes.ENUM("LUNAS", "BELUM LUNAS"),
       tanggal_pembayaran: DataTypes.DATE,
