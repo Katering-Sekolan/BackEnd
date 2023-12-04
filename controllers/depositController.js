@@ -51,15 +51,12 @@ module.exports = {
           "id",
           "jumlah_deposit",
           [
-            sequelize.fn(
-              "DATE_FORMAT",
-              sequelize.col("tanggal_deposit"),
-              "%m-%Y"
+            sequelize.literal(
+              'DATE_FORMAT(`tanggal_deposit`, "%d %M %Y")'
             ),
-            "tanggal_deposit",
+            'f_tanggal_deposit'
           ],
         ],
-        exclude: ["user_id", "createdAt", "updatedAt"],
         include: {
           model: User,
           as: "user",
@@ -76,6 +73,10 @@ module.exports = {
       });
     } catch (err) {
       console.log(err);
+      return res.status(500).json({
+        status: "error",
+        message: "Terjadi kesalahan internal.",
+      });
     }
   },
 
@@ -90,14 +91,7 @@ module.exports = {
         attributes: [
           "id",
           "jumlah_deposit",
-          [
-            sequelize.fn(
-              "DATE_FORMAT",
-              sequelize.col("tanggal_deposit"),
-              "%m-%Y"
-            ),
-            "tanggal_deposit",
-          ],
+          "tanggal_deposit",
         ],
         exclude: ["user_id", "createdAt", "updatedAt"],
         include: {

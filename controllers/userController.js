@@ -1,5 +1,6 @@
 const { User, Deposit } = require("../models");
 
+
 module.exports = {
   create: async (req, res) => {
     try {
@@ -75,6 +76,44 @@ module.exports = {
         status: "success",
         message: `Berhasil mengubah data pelanggan dengan nama ${cekUser.nama}`,
         data: user,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  },
+
+  deleteOne: async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const cekUser = await User.findOne({
+        where: {
+          id,
+        },
+      });
+
+      if (!cekUser) {
+        return res.status(404).json({
+          status: "failed",
+          message: `User dengan id ${id} tidak ditemukan`,
+        });
+      }
+
+      await Deposit.destroy({
+        where: {
+          user_id: id,
+        },
+      });
+
+      await User.destroy({
+        where: {
+          id,
+        },
+      });
+
+      return res.status(200).json({
+        status: "success",
+        message: `Berhasil menghapus pelanggan dengan nama ${cekUser.nama}`,
       });
     } catch (err) {
       console.log(err);

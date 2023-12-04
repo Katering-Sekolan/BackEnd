@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const cadmin = require("../controllers/adminController");
 const cuser = require("../controllers/userController");
+const ctagihanBulanan = require("../controllers/tagihanBulanan");
 const cdeposit = require("../controllers/depositController");
 const charga = require("../controllers/hargaController");
 
@@ -17,7 +18,16 @@ router.get("/admin/:id", cadmin.getOne);
 router.post("/user/create", cuser.create);
 router.put("/user/update/:id", cuser.update);
 router.get("/user", cuser.getAll);
+router.delete("/user/delete/:id", cuser.deleteOne);
 router.get("/user/:id", cuser.getOne);
+
+//tagihan bulanan
+router.post("/tagihanBulanan/create", ctagihanBulanan.create);
+router.put("/tagihanBulanan/update/:id", ctagihanBulanan.update);
+router.delete("/tagihanBulanan/delete/:id", ctagihanBulanan.delete);
+router.get("/semuaTagihanBulanan", ctagihanBulanan.getAll);
+router.get("/tagihanBulanan/:month", ctagihanBulanan.getAllByMonth);
+// router.get("/tagihanBulanan/:id", ctagihanBulanan.getOne);
 
 // Deposit
 router.put("/deposit/update/:id", cdeposit.update);

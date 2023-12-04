@@ -5,14 +5,34 @@ module.exports = {
     try {
       const { harga, jenis } = req.body;
 
+      if (jenis !== "MAKAN SIANG" && jenis !== "SNACK") {
+        return res.status(400).json({
+          status: "failed",
+          message: "Jenis harus 'MAKAN SIANG' atau 'SNACK'",
+        });
+      }
+
+      const existingJenis = await Harga.findOne({
+        where: {
+          jenis: jenis.toUpperCase(),
+        },
+      });
+
+      if (existingJenis) {
+        return res.status(400).json({
+          status: "failed",
+          message: "Tidak dapat menambahkan jenis baru, silahkan update harga untuk memperbaharui harga !!!!!",
+        });
+      }
+
       const newJenis = await Harga.create({
         harga,
-        jenis,
+        jenis: jenis.toUpperCase(),
       });
 
       return res.status(200).json({
         status: "success",
-        message: `Berhasil menambahkan jenis katering`,
+        message: "Berhasil menambahkan jenis katering",
         data: newJenis,
       });
     } catch (err) {
