@@ -78,7 +78,7 @@ module.exports = {
 
       const decoded = jwt.verify(token, JWT_SECRET);
 
-      if (decoded.role !== "ADMIN" || decoded.role !== "SUPERADMIN") {
+      if (decoded.role !== "ADMIN" && decoded.role !== "SUPERADMIN") {
         return res.status(403).json({
           status: false,
           message: "You're not authorized!, Only admin can access",

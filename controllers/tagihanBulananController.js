@@ -1,17 +1,19 @@
 const { TagihanBulanan, Harga, User } = require("../models");
-const { Sequelize, Op } = require('sequelize');
+const { Sequelize, Op } = require("sequelize");
 
 module.exports = {
   create: async (req, res) => {
     try {
-      const { user_id, tanggal_tagihan, efektif_snack, efektif_makanSiang } = req.body;
+      const { user_id, tanggal_tagihan, efektif_snack, efektif_makanSiang } =
+        req.body;
 
       // Validate tanggal_tagihan format (assuming 'YYYY-MM' format)
       const bulanRegex = /^\d{4}-(0[1-9]|1[0-2])$/;
       if (!tanggal_tagihan.match(bulanRegex)) {
         return res.status(400).json({
           status: "error",
-          message: "Invalid tanggal_tagihan format. Please use 'YYYY-MM' format.",
+          message:
+            "Invalid tanggal_tagihan format. Please use 'YYYY-MM' format.",
         });
       }
 
@@ -34,7 +36,7 @@ module.exports = {
       if (existingTagihan.length > 0) {
         return res.status(400).json({
           status: "error",
-          message: "Tagihan for one or more specified user_id and tanggal_tagihan already exists. Data not saved.",
+          message: `Tagihan untuk pelanggan tersebut pada bulan yang dipilih sudah ada.`,
         });
       }
 
@@ -136,7 +138,6 @@ module.exports = {
       console.log(err);
     }
   },
-
 
   getAll: async (req, res) => {
     try {
