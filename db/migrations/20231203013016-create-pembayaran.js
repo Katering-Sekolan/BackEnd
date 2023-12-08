@@ -23,7 +23,7 @@ module.exports = {
       },
       status_pembayaran: {
         allowNull: false,
-        type: Sequelize.ENUM("LUNAS", "BELUM LUNAS"),
+        type: Sequelize.ENUM("LUNAS", "TERTUNDA", "BELUM LUNAS"),
       },
       tanggal_pembayaran: {
         allowNull: false,

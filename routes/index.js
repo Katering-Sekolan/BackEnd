@@ -7,6 +7,7 @@ const user = require("./user");
 const tagihanBulanan = require("./tagihanBulanan");
 const deposit = require("./deposit");
 const harga = require("./harga");
+const pembayaran = require("./pembayaran");
 
 router.use("/auth", auth);
 router.use("/admin", mid.mustSuperAdmin, admin);
@@ -14,5 +15,7 @@ router.use("/user", mid.mustAdmin, user);
 router.use("/tagihanBulanan", mid.mustAdmin, tagihanBulanan);
 router.use("/deposit", mid.mustAdmin, deposit);
 router.use("/harga", mid.mustAdmin, harga);
+router.use("/pembayaran", mid.mustAdmin, pembayaran);
+router.use("/userPembayaran", pembayaran);
 
 module.exports = router;

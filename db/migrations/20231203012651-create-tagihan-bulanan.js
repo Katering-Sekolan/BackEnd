@@ -25,6 +25,22 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
       },
+      jumlah_snack: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+      },
+      jumlah_makanan: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+      },
+      total_snack: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+      },
+      total_makanan: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

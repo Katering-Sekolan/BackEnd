@@ -1,4 +1,4 @@
-const { TagihanBulanan, Harga, User } = require("../models");
+const { TagihanBulanan, Harga, User, Pembayaran } = require("../models");
 const { Sequelize, Op } = require("sequelize");
 
 module.exports = {
@@ -58,14 +58,26 @@ module.exports = {
 
       const newTagihanBulanans = await Promise.all(
         user_id.map(async (userId) => {
-          return await TagihanBulanan.create({
+          const newTagihanBulanan = await TagihanBulanan.create({
             user_id: userId,
             bulan: tanggal_tagihan,
             total_tagihan: total,
+            jumlah_snack: efektif_snack,
+            jumlah_makanan: efektif_makanSiang,
+            total_snack: totalSnack,
+            total_makanan: totalMakanSiang,
           });
+
+          await Pembayaran.create({
+            tagihanBulanan_id: newTagihanBulanan.id,
+            jumlah_pembayaran: 0,
+            tanggal_pembayaran: new Date(),
+            status_pembayaran: "BELUM LUNAS",
+          });
+
+          return newTagihanBulanan;
         })
       );
-
       return res.status(201).json({
         status: "success",
         message: "Berhasil menambahkan tagihan bulanan",
@@ -119,6 +131,10 @@ module.exports = {
           user_id,
           bulan,
           total_tagihan: total,
+          jumlah_snack: efektif_snack,
+          jumlah_makanan: efektif_makanSiang,
+          total_snack: totalSnack,
+          total_makanan: totalMakanSiang,
         },
         {
           where: {
@@ -223,6 +239,8 @@ module.exports = {
         attributes: [
           "id",
           "total_tagihan",
+          "jumlah_snack",
+          "jumlah_makanan",
           [
             Sequelize.fn("DATE_FORMAT", Sequelize.col("bulan"), "%m-%Y"),
             "bulan",
