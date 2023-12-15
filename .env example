@@ -1,5 +1,7 @@
 PORT = 1242
 
+URL_FRONTEND = 
+
 DB_NAME = Your DB Name
 DB_USERNAME = username
 DB_PASSWORD = pass
