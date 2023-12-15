@@ -8,6 +8,7 @@ const tagihanBulanan = require("./tagihanBulanan");
 const deposit = require("./deposit");
 const harga = require("./harga");
 const pembayaran = require("./pembayaran");
+const whatsapp = require("./whatsapp");
 
 router.use("/auth", auth);
 router.use("/admin", mid.mustSuperAdmin, admin);
@@ -17,5 +18,6 @@ router.use("/deposit", mid.mustAdmin, deposit);
 router.use("/harga", mid.mustAdmin, harga);
 router.use("/pembayaran", mid.mustAdmin, pembayaran);
 router.use("/userPembayaran", pembayaran);
+router.use("/wa", whatsapp);
 
 module.exports = router;
