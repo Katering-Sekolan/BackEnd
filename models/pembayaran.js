@@ -13,13 +13,19 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "tagihanBulanan_id",
         as: "tagihan_bulanan",
       });
+      this.hasMany(models.Transaksi, {
+        foreignKey: "pembayaran_id",
+        as: "transaksi_pembayaran",
+      });
     }
   }
   Pembayaran.init(
     {
       tagihanBulanan_id: DataTypes.INTEGER,
-      jumlah_pembayaran: DataTypes.INTEGER,
-      status_pembayaran: DataTypes.ENUM("LUNAS", "TERTUNDA","BELUM LUNAS"),
+      metode_pembayaran: DataTypes.ENUM("TRANSFER", "TUNAI"),
+      jumlah_pembayaran_cash: DataTypes.INTEGER,
+      status_pembayaran: DataTypes.ENUM("LUNAS", "BELUM LUNAS"),
+      total_pembayaran: DataTypes.INTEGER,
       tanggal_pembayaran: DataTypes.DATE,
     },
     {

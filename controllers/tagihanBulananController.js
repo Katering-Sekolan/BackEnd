@@ -7,15 +7,22 @@ module.exports = {
       const { user_id, tanggal_tagihan, efektif_snack, efektif_makanSiang } =
         req.body;
 
+      if (!tanggal_tagihan) {
+        return res.status(400).json({
+          status: "error",
+          message: "tanggal_tagihan is required.",
+        });
+      }
+
       // Validate tanggal_tagihan format (assuming 'YYYY-MM' format)
       const bulanRegex = /^\d{4}-(0[1-9]|1[0-2])$/;
       if (!tanggal_tagihan.match(bulanRegex)) {
         return res.status(400).json({
           status: "error",
-          message:
-            "Invalid tanggal_tagihan format. Please use 'YYYY-MM' format.",
+          message: "Invalid tanggal_tagihan format. Please use 'YYYY-MM' format.",
         });
       }
+
 
       const bulanDate = new Date(tanggal_tagihan);
       const bulanYear = bulanDate.getFullYear();
@@ -70,9 +77,11 @@ module.exports = {
 
           await Pembayaran.create({
             tagihanBulanan_id: newTagihanBulanan.id,
-            jumlah_pembayaran: 0,
-            tanggal_pembayaran: new Date(),
+            metode_pembayaran: "TRANSFER",
+            jumlah_pembayaran_cash: 0,
             status_pembayaran: "BELUM LUNAS",
+            total_pembayaran: total,
+            tanggal_pembayaran: new Date(),
           });
 
           return newTagihanBulanan;

@@ -17,13 +17,21 @@ module.exports = {
           key: "id",
         },
       },
-      jumlah_pembayaran: {
+      metode_pembayaran: {
+        allowNull: false,
+        type: Sequelize.ENUM("TRANSFER", "CASH"),
+      },
+      jumlah_pembayaran_cash: {
         allowNull: false,
         type: Sequelize.INTEGER,
       },
       status_pembayaran: {
         allowNull: false,
-        type: Sequelize.ENUM("LUNAS", "TERTUNDA", "BELUM LUNAS"),
+        type: Sequelize.ENUM("LUNAS", "BELUM LUNAS"),
+      },
+      total_pembayaran: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
       },
       tanggal_pembayaran: {
         allowNull: false,
