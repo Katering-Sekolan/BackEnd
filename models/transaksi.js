@@ -21,8 +21,11 @@ module.exports = (sequelize, DataTypes) => {
   Transaksi.init({
     pembayaran_id: DataTypes.INTEGER,
     snap_token: DataTypes.STRING,
+    order_id: DataTypes.STRING,
     tanggal_transaksi: DataTypes.DATE,
-    status_transaksi: DataTypes.ENUM("LUNAS", "MENUNGGU PEMBAYARAN", "BELUM LUNAS")
+    status_transaksi: DataTypes.ENUM("PEMBAYARAN BERHASIL", "PEMBAYARAN GAGAL", "PEMBAYARAN DITOLAK",
+      "PEMBAYARAN MENUNGGU KONFIRMASI", "PEMBAYARAN DIPROSES", "PEMBAYARAN DIBATALKAN",
+      "PEMBAYARAN DITUNDA", "PEMBAYARAN EXPIRED", "PEMBAYARAN REFUND", "MENUNGGU PEMBAYARAN")
   }, {
     sequelize,
     modelName: 'Transaksi',
