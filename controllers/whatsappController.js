@@ -1,11 +1,13 @@
 const { Client, LocalAuth } = require("whatsapp-web.js");
-const { TagihanBulanan, User, Transaksi, Pembayaran } = require("../models");
-// const io = require("../app");
+const { TagihanBulanan, User } = require("../models");
 const qrcode = require("qrcode");
-const { Sequelize, Op } = require("sequelize");
+const { Sequelize } = require("sequelize");
 const { URL_FRONTEND } = process.env;
 
 const client = new Client({
+  puppeteer: {
+    headless: true,
+  },
   authStrategy: new LocalAuth({ clientId: "client-one" }),
 });
 
@@ -13,31 +15,12 @@ module.exports = {
   connection: (io) => {
     io.on("connection", function (socket) {
       socket.emit("message", "Connecting...");
-      // Function to emit a new QR code
-      // const emitNewQRCode = async () => {
-      // 	const qrCode = await client.generateQR();
-      // 	const qrCodeDataUrl = await qrcode.toDataURL(qrCode);
-      // 	io.emit("qrCode", qrCodeDataUrl);
-      // 	console.log("New QR Code emitted");
-      // };
 
       client.on("qr", async (qrCode) => {
         const qrCodeDataUrl = await qrcode.toDataURL(qrCode);
         io.emit("qrCode", qrCodeDataUrl);
         console.log("QR RECEIVED", qrCode);
       });
-
-      // Listen for disconnected event
-      // client.on("disconnected", (reason) => {
-      // 	console.log("Client disconnected:", reason);
-
-      // 	// Automatically provide a new QR code after disconnecting
-      // 	// emitNewQRCode();
-
-      // 	// Reinitialize the client after disconnecting
-      // 	client.initialize();
-
-      // });
 
       client.on("authenticated", (session) => {
         io.emit("authenticated", "Whatsapp is authenticated!");
@@ -52,8 +35,6 @@ module.exports = {
       });
 
       client.initialize();
-
-      // module.exports = client;
     });
   },
   sendMessage: async (req, res) => {
@@ -106,7 +87,7 @@ module.exports = {
 
       return res.status(200).json({
         status: "success",
-        message: "Successfully sent messages to users",
+        message: "Berhasil mengirim pesan broadcast ke orang tua siswa/siswi",
       });
     } catch (err) {
       console.log(err);
@@ -115,13 +96,21 @@ module.exports = {
   messageIfPaid: async (nama, kelas, nomor_hp) => {
     try {
       const formattedPhone = nomor_hp + "@c.us";
-      const pesan = `Halo ${nama} dari kelas ${kelas}, pembayaran kamu sudah kami terima. Terima kasih sudah membayar tagihan kamu. Salam, Sekolah Qita`;
+      const pesan = `Halo orang tua dari ${nama}, kelas ${kelas}, pembayaran anda sudah kami terima. Terima kasih sudah membayar tagihan katering pada bulan ini.`;
       await client.sendMessage(formattedPhone, pesan);
     } catch (err) {
       console.log(err);
     }
   },
-
-
-
+  logOut: async (req, res) => {
+    try {
+      await client.logout();
+      return res.status(200).json({
+        status: "success",
+        message: "Berhasil logout dari whatsapp",
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  },
 };
