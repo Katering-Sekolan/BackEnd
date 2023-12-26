@@ -112,18 +112,16 @@ module.exports = {
       console.log(err);
     }
   },
-  messageIfPaid: async (transaksiId) => {
+  messageIfPaid: async (nama, kelas, nomor_hp) => {
     try {
-      const transaksi = await Transaksi.findOne({
-        where: { id: transaksiId },
-      });
-      const { nama, nomor_hp } = await TagihanBulanan.findOne({
-        where: { id: transaksi.pembayaran_id },
-      });
-      const pesan = `Halo ${nama}, pembayaran kamu sudah kami terima. Terima kasih sudah membayar tagihan kamu. Salam, Sekolah Qita`;
-      await client.sendMessage(nomor_hp, pesan);
+      const formattedPhone = nomor_hp + "@c.us";
+      const pesan = `Halo ${nama} dari kelas ${kelas}, pembayaran kamu sudah kami terima. Terima kasih sudah membayar tagihan kamu. Salam, Sekolah Qita`;
+      await client.sendMessage(formattedPhone, pesan);
     } catch (err) {
       console.log(err);
     }
   },
+
+
+
 };

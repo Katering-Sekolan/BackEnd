@@ -1,5 +1,5 @@
 const midtransClient = require("midtrans-client");
-const { Transaksi, Pembayaran } = require("../models");
+const { Transaksi, Pembayaran, TagihanBulanan, User } = require("../models");
 const crypto = require("crypto");
 const whatsappController = require("./whatsappController");
 
@@ -103,8 +103,8 @@ module.exports = {
     try {
       const {
         order_id,
-        transaction_status,
         status_code,
+        transaction_status,
         gross_amount,
         signature_key,
       } = req.body;
@@ -162,17 +162,44 @@ module.exports = {
         { status_transaksi: mappedStatus },
         { where: { order_id: orderId } }
       );
+
+
       const transaksi = await Transaksi.findOne({
         where: { order_id: orderId },
+        include: [
+          {
+            model: Pembayaran,
+            as: "transaksi_pembayaran",
+            include: [
+              {
+                model: TagihanBulanan,
+                as: "tagihan_bulanan",
+                include: [
+                  {
+                    model: User,
+                    as: "user_tagihan_bulanan",
+                    attributes: ["nama", "kelas", "nomor_hp"],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
       });
+
+
 
       if (mappedStatus === "PEMBAYARAN BERHASIL") {
         await Pembayaran.update(
           { status_pembayaran: "LUNAS" },
           { where: { id: transaksi.pembayaran_id } }
         );
-        whatsappController.messageIfPaid(transaksi.pembayaran_id);
+        const { nama, kelas, nomor_hp } = transaksi.transaksi_pembayaran.tagihan_bulanan.user_tagihan_bulanan || {};
+        console.log(`Nama: ${nama}, Kelas: ${kelas}, No HP: ${nomor_hp}`);
+        whatsappController.messageIfPaid(nama, kelas, nomor_hp);
+
       }
+
       res.sendStatus(200);
     } catch (err) {
       console.error(err);
