@@ -49,7 +49,7 @@ module.exports = {
   update: async (req, res) => {
     try {
       const { id } = req.params;
-      const { username, password } = req.body;
+      const { username } = req.body;
 
       const cekAdmin = await Admin.findOne({
         where: {
@@ -64,21 +64,9 @@ module.exports = {
         });
       }
 
-      const passwordLength = password.length;
-
-      if (passwordLength < 6) {
-        return res.status(400).json({
-          status: "failed",
-          message: "Password minimal 6 karakter",
-        });
-      }
-
-      const hashPassword = await bcrypt.hash(password, 10);
-
       const admin = await Admin.update(
         {
           username,
-          password: hashPassword,
         },
         {
           where: {

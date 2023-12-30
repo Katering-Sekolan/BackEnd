@@ -20,6 +20,6 @@ router.use("/harga", mid.mustAdmin, harga);
 router.use("/pembayaran", mid.mustAdmin, pembayaran);
 router.use("/prosesPembayaran", pembayaran);
 router.use("/userPembayaran", userPembayaran);
-router.use("/wa", whatsapp);
+router.use("/wa", mid.mustAdmin, whatsapp);
 
 module.exports = router;

@@ -5,10 +5,8 @@ const { Sequelize } = require("sequelize");
 const { URL_FRONTEND } = process.env;
 
 const client = new Client({
-  puppeteer: {
-    headless: true,
-  },
   authStrategy: new LocalAuth({ clientId: "client-one" }),
+  clientId: "client-one",
 });
 
 module.exports = {
@@ -54,11 +52,14 @@ module.exports = {
     }
   },
   broadcastBill: async (req, res) => {
+    const { month } = req.params;
+
     try {
       const tagihan = await TagihanBulanan.findAll({
         attributes: [
           "id",
           "total_tagihan",
+
           [
             Sequelize.fn("DATE_FORMAT", Sequelize.col("bulan"), "%Y-%m"),
             "bulan",
@@ -72,6 +73,10 @@ module.exports = {
             exclude: ["createdAt", "updatedAt"],
           },
         },
+        where: Sequelize.where(
+          Sequelize.fn("DATE_FORMAT", Sequelize.col("bulan"), "%Y-%m"),
+          month
+        ),
       });
 
       for (let i = 0; i < tagihan.length; i++) {
