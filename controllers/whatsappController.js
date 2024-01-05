@@ -59,7 +59,8 @@ module.exports = {
         attributes: [
           "id",
           "total_tagihan",
-
+          "jumlah_snack",
+          "jumlah_makanan",
           [
             Sequelize.fn("DATE_FORMAT", Sequelize.col("bulan"), "%Y-%m"),
             "bulan",
@@ -80,10 +81,16 @@ module.exports = {
       });
 
       for (let i = 0; i < tagihan.length; i++) {
-        const { total_tagihan, bulan, user_tagihan_bulanan } = tagihan[i];
+        const {
+          total_tagihan,
+          bulan,
+          jumlah_snack,
+          jumlah_makanan,
+          user_tagihan_bulanan,
+        } = tagihan[i];
         const { id, nomor_hp, nama, kelas } = user_tagihan_bulanan;
         const formattedPhone = nomor_hp + "@c.us";
-        const template = `Hallo, kami dari pengurus Katering Sekolah Qaryah Thayyibah Purwokerto akan memberitahukan kepada orang tua siswa/siswi dari:\nNama: ${nama}\nKelas: ${kelas}\n\nTerkait dengan tagihan katering bulan ini adalah total Rp. ${total_tagihan} dan dapat dibayarkan pada link berikut: \n${URL_FRONTEND}/user/bayarTagihan?userId=${id}&month=${bulan}\n\n Terima kasih`;
+        const template = `Hallo, kami dari pengurus Katering Sekolah Qaryah Thayyibah Purwokerto akan memberitahukan kepada orang tua siswa/siswi dari:\nNama: ${nama}\nKelas: ${kelas}\nJumlah Snack: ${jumlah_snack}\nJumlah Makan Siang: ${jumlah_makanan}\n\nTerkait dengan tagihan katering bulan ini adalah total Rp. ${total_tagihan} dan dapat dibayarkan pada link berikut: \n${URL_FRONTEND}/user/bayarTagihan?userId=${id}&month=${bulan}\n\n Terima kasih`;
 
         setTimeout(async () => {
           await client.sendMessage(formattedPhone, template);
