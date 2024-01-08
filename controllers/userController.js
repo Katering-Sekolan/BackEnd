@@ -1,6 +1,5 @@
 const { User, Deposit } = require("../models");
 
-
 module.exports = {
   create: async (req, res) => {
     try {
@@ -19,10 +18,12 @@ module.exports = {
         });
       }
 
+      const formatNoHp = "62" + nomor_hp;
+
       const newUser = await User.create({
         nama,
         kelas,
-        nomor_hp,
+        nomor_hp: formatNoHp,
       });
 
       const newDeposit = await Deposit.create({
