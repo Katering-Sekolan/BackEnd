@@ -1,4 +1,4 @@
-const { TagihanBulanan, Harga, User, Pembayaran } = require("../models");
+const { TagihanBulanan, Harga, User, Deposit, Pembayaran } = require("../models");
 const { Sequelize, Op } = require("sequelize");
 
 module.exports = {
@@ -65,14 +65,26 @@ module.exports = {
 
       const newTagihanBulanans = await Promise.all(
         user_id.map(async (userId) => {
+          const depositInfo = await Deposit.findOne({
+            where: {
+              user_id: userId,
+
+            },
+          });
+          const totalTagihan_Depo = total - depositInfo.jumlah_deposit;
           const newTagihanBulanan = await TagihanBulanan.create({
             user_id: userId,
             bulan: tanggal_tagihan,
-            total_tagihan: total,
+            total_tagihan: totalTagihan_Depo,
             jumlah_snack: efektif_snack,
             jumlah_makanan: efektif_makanSiang,
             total_snack: totalSnack,
             total_makanan: totalMakanSiang,
+          });
+
+
+          await depositInfo.update({
+            jumlah_deposit: 0,
           });
 
           await Pembayaran.create({
@@ -84,8 +96,10 @@ module.exports = {
             tanggal_pembayaran: new Date(),
           });
 
+
           return newTagihanBulanan;
         })
+
       );
       return res.status(201).json({
         status: "success",
