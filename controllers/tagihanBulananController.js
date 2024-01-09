@@ -92,7 +92,7 @@ module.exports = {
             metode_pembayaran: "TRANSFER",
             jumlah_pembayaran_cash: 0,
             status_pembayaran: "BELUM LUNAS",
-            total_pembayaran: total,
+            total_pembayaran: totalTagihan_Depo,
             tanggal_pembayaran: new Date(),
           });
 
