@@ -47,6 +47,61 @@ module.exports = {
     }
   },
 
+  bayarTunai: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { jumlah_pembayaran_cash } = req.body;
+
+      const pembayaran = await Pembayaran.findOne({
+        where: {
+          id,
+        },
+        include: {
+          model: TagihanBulanan,
+          as: "tagihan_bulanan",
+        },
+      });
+
+      if (!pembayaran) {
+        return res.status(404).json({
+          status: "failed",
+          message: `Pembayaran tidak ditemukan`,
+        });
+      }
+
+      const bayarTunai = pembayaran.jumlah_pembayaran_cash + jumlah_pembayaran_cash;
+      const total_pembayaran = pembayaran.tagihan_bulanan.total_tagihan - bayarTunai;
+      const status_pembayaran = total_pembayaran === 0 ? "LUNAS" : "BELUM LUNAS";
+      const metode_pembayaran = total_pembayaran === 0 ? "TUNAI" : "TRANSFER";
+
+      if (total_pembayaran < 0) {
+        return res.status(400).json({
+          status: "failed",
+          message: "Pembayaran melebihi total tagihan. Tidak dapat membayar lebih dari tagihan.",
+        });
+      }
+
+      const updatedPembayaran = await pembayaran.update({
+        jumlah_pembayaran_cash: bayarTunai,
+        total_pembayaran,
+        status_pembayaran,
+        metode_pembayaran,
+      });
+
+      return res.status(200).json({
+        status: "success",
+        message: "Berhasil memperbaharui data pembayaran",
+        data: updatedPembayaran,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        status: "error",
+        message: "Terjadi kesalahan internal.",
+      });
+    }
+  },
+
   getByUserIdBulan: async (req, res) => {
     try {
       const { id, month } = req.params;
