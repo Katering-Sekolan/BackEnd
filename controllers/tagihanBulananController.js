@@ -1,4 +1,4 @@
-const { TagihanBulanan, Harga, User, Deposit, Pembayaran } = require("../models");
+const { TagihanBulanan, Harga, User, Deposit, Pembayaran, Transaksi } = require("../models");
 const { Sequelize, Op } = require("sequelize");
 
 module.exports = {
@@ -301,31 +301,61 @@ module.exports = {
     try {
       const { id } = req.params;
 
-      const cekTagihanBulanan = await TagihanBulanan.findOne({
+      const tagihanBulanan = await TagihanBulanan.findOne({
         where: {
           id,
         },
+        include: [
+          {
+            model: Pembayaran,
+            as: 'tagihan_bulanan',
+            include: [
+              {
+                model: Transaksi,
+                as: 'transaksi_pembayaran',
+              },
+            ],
+          },
+        ],
       });
 
-      if (!cekTagihanBulanan) {
+      if (!tagihanBulanan) {
         return res.status(404).json({
-          status: "failed",
-          message: `Tagihan bulanan tidak ditemukan`,
+          status: 'failed',
+          message: 'Tagihan bulanan tidak ditemukan',
         });
       }
 
-      await TagihanBulanan.destroy({
+      if (
+        tagihanBulanan.tagihan_bulanan &&
+        tagihanBulanan.tagihan_bulanan.transaksi_pembayaran &&
+        tagihanBulanan.tagihan_bulanan.transaksi_pembayaran.id
+      ) {
+        await Transaksi.destroy({
+          where: {
+            pembayaran_id: tagihanBulanan.tagihan_bulanan.transaksi_pembayaran.id,
+          },
+        });
+      }
+
+      await Pembayaran.destroy({
         where: {
-          id,
+          tagihanBulanan_id: id,
         },
       });
 
+      await tagihanBulanan.destroy();
+
       return res.status(200).json({
-        status: "success",
-        message: `Berhasil menghapus tagihan bulanan`,
+        status: 'success',
+        message: 'Berhasil menghapus tagihan bulanan dan pembayaran terkait',
       });
     } catch (err) {
       console.log(err);
+      return res.status(500).json({
+        status: 'error',
+        message: 'Terjadi kesalahan internal.',
+      });
     }
   },
 };

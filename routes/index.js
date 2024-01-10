@@ -10,6 +10,7 @@ const harga = require("./harga");
 const pembayaran = require("./pembayaran");
 const userPembayaran = require("./transaksi");
 const whatsapp = require("./whatsapp");
+const generatePdf = require("./generatePdf");
 
 router.use("/auth", auth);
 router.use("/admin", mid.mustSuperAdmin, admin);
@@ -21,5 +22,6 @@ router.use("/pembayaran", mid.mustAdmin, pembayaran);
 router.use("/prosesPembayaran", pembayaran);
 router.use("/userPembayaran", userPembayaran);
 router.use("/wa", mid.mustAdmin, whatsapp);
+router.use("/pdf", generatePdf);
 
 module.exports = router;
