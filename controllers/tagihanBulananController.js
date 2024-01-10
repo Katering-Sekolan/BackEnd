@@ -336,6 +336,19 @@ module.exports = {
             pembayaran_id: tagihanBulanan.tagihan_bulanan.transaksi_pembayaran.id,
           },
         });
+
+        const remainingTransactions = await Transaksi.findOne({
+          where: {
+            pembayaran_id: tagihanBulanan.tagihan_bulanan.transaksi_pembayaran.id,
+          },
+        });
+
+        if (remainingTransactions) {
+          return res.status(400).json({
+            status: 'failed',
+            message: 'Tidak dapat dihapus karena pelanggan sudah melakukan transaksi pembayaran',
+          });
+        }
       }
 
       await Pembayaran.destroy({
@@ -354,8 +367,9 @@ module.exports = {
       console.log(err);
       return res.status(500).json({
         status: 'error',
-        message: 'Terjadi kesalahan internal.',
+        message: 'Tidak dapat dihapus karena pelanggan sudah melakukan transaksi pembayaran!',
       });
     }
   },
+
 };
