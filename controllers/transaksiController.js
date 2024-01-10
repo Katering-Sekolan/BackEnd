@@ -17,8 +17,9 @@ module.exports = {
     try {
       const {
         id_pembayaran,
-        total_tagihann,
         jumlah_makanan,
+        total_pembayaran,
+        jumlah_pembayaran_cash,
         jumlah_snack,
         total_makanan,
         total_snack,
@@ -30,10 +31,11 @@ module.exports = {
       const orderId = `TAGIHAN-${nama}-${id_pembayaran}-${Date.now()}`;
       const totalMakanan = total_makanan / jumlah_makanan;
       const totalSnack = total_snack / jumlah_snack;
+      const bayarTunai = jumlah_pembayaran_cash * -1;
       const parameter = {
         transaction_details: {
           order_id: orderId,
-          gross_amount: total_tagihann,
+          gross_amount: total_pembayaran,
         },
         credit_card: {
           secure: true,
@@ -51,6 +53,12 @@ module.exports = {
             quantity: jumlah_makanan,
             name: "Makan Siang",
           },
+          {
+            id: 3,
+            price: bayarTunai,
+            quantity: 1,
+            name: "Bayar Tunai",
+          }
         ],
         customer_details: {
           first_name: nama,

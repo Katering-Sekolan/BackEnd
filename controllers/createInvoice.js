@@ -66,37 +66,43 @@ function generateInvoiceInformation(doc, invoice) {
 
     doc
         .fontSize(10)
-        .text("Invoice Number:", 50, customerInformationTop)
+
+        .text("Nama", 50, customerInformationTop)
         .font("Helvetica-Bold")
-        .text(invoice.order_id, 150, customerInformationTop)
+        .text(": " + invoice.transaksi_pembayaran.tagihan_bulanan.user_tagihan_bulanan.nama, 150, customerInformationTop)
         .font("Helvetica")
-        .text("Invoice Date:", 50, customerInformationTop + 15)
-        .text(formatDate(new Date(invoice.tanggal_transaksi)), 150, customerInformationTop + 15)
-        .text("Bayar Tunai:", 50, customerInformationTop + 30)
-        .text(
+        .text("Kelas", 50, customerInformationTop + 15)
+        .text(": " + invoice.transaksi_pembayaran.tagihan_bulanan.user_tagihan_bulanan.kelas, 150, customerInformationTop + 15)
+        .text("Bulan", 50, customerInformationTop + 30)
+        .text(": " + formatDate(new Date(invoice.transaksi_pembayaran.tagihan_bulanan.bulan)), 150, customerInformationTop + 30)
+        .text("Status", 50, customerInformationTop + 45)
+        .text(": " + invoice.transaksi_pembayaran.status_pembayaran, 150, customerInformationTop + 45)
+
+        .text("Nomor Invoice", 50, customerInformationTop + 60)
+        .font("Helvetica-Bold")
+        .text(": " + invoice.order_id, 150, customerInformationTop + 60)
+        .font("Helvetica")
+        .text("Tanggal Invoice", 50, customerInformationTop + 75)
+        .text(": " + formatDate(new Date(invoice.tanggal_transaksi)), 150, customerInformationTop + 75)
+        .text("Bayar Tunai", 50, customerInformationTop + 90)
+        .text(": " +
             formatCurrency(invoice.transaksi_pembayaran.jumlah_pembayaran_cash),
             150,
-            customerInformationTop + 30
+            customerInformationTop + 90
         )
-        .text("Total Pembayaran:", 50, customerInformationTop + 45)
-        .text(
+        .text("Total Pembayaran", 50, customerInformationTop + 105)
+        .text(": " +
             formatCurrency(invoice.transaksi_pembayaran.total_pembayaran),
             150,
-            customerInformationTop + 45
+            customerInformationTop + 105
         )
-        .font("Helvetica-Bold")
-        .text(invoice.transaksi_pembayaran.tagihan_bulanan.user_tagihan_bulanan.nama, 350, customerInformationTop)
-        .font("Helvetica")
-        .text("No. HP: " + invoice.transaksi_pembayaran.tagihan_bulanan.user_tagihan_bulanan.nomor_hp, 350, customerInformationTop + 15)
-        .text("Kelas: " + invoice.transaksi_pembayaran.tagihan_bulanan.user_tagihan_bulanan.kelas, 350, customerInformationTop + 30)
         .moveDown();
 
-    generateHr(doc, 255);
 }
 
 function generateInvoiceTable(doc, invoice) {
     const invoiceTableTop = 330;
-
+    generateHr(doc, 320);
     doc.font("Helvetica-Bold");
     generateTableRow(
         doc,
