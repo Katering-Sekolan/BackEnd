@@ -90,7 +90,7 @@ module.exports = {
         } = tagihan[i];
         const { id, nomor_hp, nama, kelas } = user_tagihan_bulanan;
         const formattedPhone = nomor_hp + "@c.us";
-        const template = `Hallo, kami dari pengurus Katering Sekolah Qaryah Thayyibah Purwokerto akan memberitahukan kepada orang tua siswa/siswi dari:\nNama: ${nama}\nKelas: ${kelas}\nJumlah Snack: ${jumlah_snack}\nJumlah Makan Siang: ${jumlah_makanan}\n\nTerkait dengan tagihan katering bulan ini adalah total Rp. ${total_tagihan} dan dapat dibayarkan pada link berikut: \n${URL_FRONTEND}/user/bayarTagihan?userId=${id}&month=${bulan}\n\n Terima kasih`;
+        const template = `Assalamu'alaikum Wr. Wb., kami selaku pengurus Katering Sekolah Qaryah Thayyibah Purwokerto, ingin menginformasikan kepada orang tua siswa/siswi terkait tagihan katering pada bulan ini dengan detail sebagai berikut:\nNama: ${nama}\nKelas: ${kelas}\nJumlah Snack: ${jumlah_snack}\nJumlah Makan Siang: ${jumlah_makanan}\nTotal Tagihan: Rp. ${total_tagihan}\n\nTagihan dapat dibayarkan melalui transfer pada link berikut: \n${URL_FRONTEND}/user/bayarTagihan?userId=${id}&month=${bulan}\n Jika bapak/ibu orang tua mengalami kendala dalam pembayaran transfer bisa menghubungi kami lebih lanjut.\n\nTerima kasih atas perhatiannya. Wassalamu'alaikum Wr. Wb.`;
 
         setTimeout(async () => {
           await client.sendMessage(formattedPhone, template);

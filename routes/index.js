@@ -11,6 +11,7 @@ const pembayaran = require("./pembayaran");
 const userPembayaran = require("./transaksi");
 const whatsapp = require("./whatsapp");
 const generatePdf = require("./generatePdf");
+const count = require("./count");
 
 router.use("/auth", auth);
 router.use("/admin", mid.mustSuperAdmin, admin);
@@ -23,5 +24,6 @@ router.use("/prosesPembayaran", pembayaran);
 router.use("/userPembayaran", userPembayaran);
 router.use("/wa", mid.mustAdmin, whatsapp);
 router.use("/pdf", generatePdf);
+router.use("/count", count);
 
 module.exports = router;
