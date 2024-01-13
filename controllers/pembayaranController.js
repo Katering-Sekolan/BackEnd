@@ -69,6 +69,13 @@ module.exports = {
         });
       }
 
+      if (pembayaran.status_pembayaran === "LUNAS") {
+        return res.status(400).json({
+          status: "failed",
+          message: "Pembayaran sudah LUNAS. Tidak dapat menambah pembayaran tunai.",
+        });
+      }
+
       const bayarTunai = pembayaran.jumlah_pembayaran_cash + jumlah_pembayaran_cash;
       const total_pembayaran = pembayaran.tagihan_bulanan.total_tagihan - bayarTunai;
       const status_pembayaran = total_pembayaran === 0 ? "LUNAS" : "BELUM LUNAS";
@@ -101,6 +108,7 @@ module.exports = {
       });
     }
   },
+
 
   getByUserIdBulan: async (req, res) => {
     try {
