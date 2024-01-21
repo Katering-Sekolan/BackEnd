@@ -132,6 +132,25 @@ module.exports = {
           message: `Tagihan bulanan tidak ditemukan`,
         });
       }
+      const correspondingPembayaran = await Pembayaran.findOne({
+        where: {
+          tagihanBulanan_id: id,
+        },
+      });
+
+      if (!correspondingPembayaran) {
+        return res.status(404).json({
+          status: "failed",
+          message: `Pembayaran tidak ditemukan untuk tagihan bulanan ini`,
+        });
+      }
+
+      if (correspondingPembayaran.status_pembayaran === "LUNAS") {
+        return res.status(400).json({
+          status: "failed",
+          message: "Tagihan bulanan dengan status pembayaran 'LUNAS' tidak dapat diubah",
+        });
+      }
 
       const hargaSnack = await Harga.findOne({
         where: {
