@@ -11,8 +11,6 @@ const http = require("http");
 const qrcode = require("qrcode");
 const whatsappController = require("./controllers/whatsappController");
 
-
-
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
@@ -29,8 +27,6 @@ const io = socketIO(server, {
 whatsappController.connection(io);
 
 // module.exports = client;
-
-
 
 // app.post("/wa/sendMessage", async (req, res) => {
 //   const { number, message } = req.body;
