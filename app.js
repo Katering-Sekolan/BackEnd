@@ -21,8 +21,6 @@ const io = socketIO(server, {
   cors: {
     origin: URL_FRONTEND,
     methods: ["GET", "POST"],
-    allowedHeaders: ["my-custom-header"],
-    credentials: true,
   },
 });
 
