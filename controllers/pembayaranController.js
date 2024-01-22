@@ -1,11 +1,13 @@
 const { Pembayaran, TagihanBulanan, User } = require("../models");
 const { Op, Sequelize } = require("sequelize");
+const whatsappController = require("./whatsappController");
 
 module.exports = {
   update: async (req, res) => {
     try {
       const { id } = req.params;
-      const { jumlah_pembayaran, status_pembayaran, tanggal_pembayaran } = req.body;
+      const { jumlah_pembayaran, status_pembayaran, tanggal_pembayaran } =
+        req.body;
 
       const cekPembayaran = await Pembayaran.findOne({
         where: {
@@ -59,8 +61,15 @@ module.exports = {
         include: {
           model: TagihanBulanan,
           as: "tagihan_bulanan",
+          include: {
+            model: User,
+            as: "user_tagihan_bulanan",
+            attributes: ["nama", "kelas", "nomor_hp"],
+          },
         },
       });
+
+      console.log(pembayaran.tagihan_bulanan.user_tagihan_bulanan);
 
       if (!pembayaran) {
         return res.status(404).json({
@@ -72,19 +81,24 @@ module.exports = {
       if (pembayaran.status_pembayaran === "LUNAS") {
         return res.status(400).json({
           status: "failed",
-          message: "Pembayaran sudah LUNAS. Tidak dapat menambah pembayaran tunai.",
+          message:
+            "Pembayaran sudah LUNAS. Tidak dapat menambah pembayaran tunai.",
         });
       }
 
-      const bayarTunai = pembayaran.jumlah_pembayaran_cash + jumlah_pembayaran_cash;
-      const total_pembayaran = pembayaran.tagihan_bulanan.total_tagihan - bayarTunai;
-      const status_pembayaran = total_pembayaran === 0 ? "LUNAS" : "BELUM LUNAS";
+      const bayarTunai =
+        pembayaran.jumlah_pembayaran_cash + jumlah_pembayaran_cash;
+      const total_pembayaran =
+        pembayaran.tagihan_bulanan.total_tagihan - bayarTunai;
+      const status_pembayaran =
+        total_pembayaran === 0 ? "LUNAS" : "BELUM LUNAS";
       const metode_pembayaran = total_pembayaran === 0 ? "TUNAI" : "TRANSFER";
 
       if (total_pembayaran < 0) {
         return res.status(400).json({
           status: "failed",
-          message: "Pembayaran melebihi total tagihan. Tidak dapat membayar lebih dari tagihan.",
+          message:
+            "Pembayaran melebihi total tagihan. Tidak dapat membayar lebih dari tagihan.",
         });
       }
 
@@ -94,6 +108,11 @@ module.exports = {
         status_pembayaran,
         metode_pembayaran,
       });
+
+      const { nama, kelas, nomor_hp } =
+        pembayaran.tagihan_bulanan.user_tagihan_bulanan || {};
+      console.log(`Nama: ${nama}, Kelas: ${kelas}, No HP: ${nomor_hp}`);
+      whatsappController.messageIfPaid(nama, kelas, nomor_hp);
 
       return res.status(200).json({
         status: "success",
@@ -108,7 +127,6 @@ module.exports = {
       });
     }
   },
-
 
   getByUserIdBulan: async (req, res) => {
     try {
@@ -369,6 +387,5 @@ module.exports = {
         message: "Terjadi kesalahan internal.",
       });
     }
-  }
-
+  },
 };
