@@ -58,7 +58,7 @@ function generateInvoiceInformation(doc, invoice) {
     doc
         .fillColor("#444444")
         .fontSize(20)
-        .text("INVOICE", 50, 160);
+        .text("KWITANSI", 50, 160);
 
     generateHr(doc, 185);
 
@@ -75,14 +75,16 @@ function generateInvoiceInformation(doc, invoice) {
         .text(": " + invoice.transaksi_pembayaran.tagihan_bulanan.user_tagihan_bulanan.kelas, 150, customerInformationTop + 15)
         .text("Bulan", 50, customerInformationTop + 30)
         .text(": " + formatDate(new Date(invoice.transaksi_pembayaran.tagihan_bulanan.bulan)), 150, customerInformationTop + 30)
-        .text("Status", 50, customerInformationTop + 45)
-        .text(": " + invoice.transaksi_pembayaran.status_pembayaran, 150, customerInformationTop + 45)
 
-        .text("Nomor Invoice", 50, customerInformationTop + 60)
+        .text("Status", 50, customerInformationTop + 45)
+        .font("Helvetica-Bold")
+        .text(": " + invoice.transaksi_pembayaran.status_pembayaran, 150, customerInformationTop + 45)
+        .font("Helvetica")
+        .text("Nomor Transaksi", 50, customerInformationTop + 60)
         .font("Helvetica-Bold")
         .text(": " + invoice.order_id, 150, customerInformationTop + 60)
         .font("Helvetica")
-        .text("Tanggal Invoice", 50, customerInformationTop + 75)
+        .text("Tanggal Transaksi", 50, customerInformationTop + 75)
         .text(": " + formatDate(new Date(invoice.tanggal_transaksi)), 150, customerInformationTop + 75)
         .text("Bayar Tunai", 50, customerInformationTop + 90)
         .text(": " +
